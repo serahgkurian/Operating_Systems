@@ -19,7 +19,7 @@ int check(struct Process p[], int n, int comp) {
 
     // Find the process with the smallest burst time among arrived processes
     for(int i = 0; i < n; i++) {
-        if (p[i].arrival_time <= comp && p[i].burst_time < sml && p[i].done == 0) {
+        if (p[i].arrival_time <= comp && p[i].burst_time < sml && p[i].done == 0) {   //this checks wheter the process has already arrived and among those arrived which is the smallest + undone
             sml = p[i].burst_time;
             in = i;
         }
