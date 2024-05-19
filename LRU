@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+int count;
+int flag1,flag2=0;
+int cp; int fault=0; 
+int t[100];
+int findmin(int f[]) //finding the least used frame
+{ 
+    int min=t[0]; int sml=0;
+  for(int i=0;i<cp;i++)
+  {
+     if(t[i]<min)
+     {
+         sml=i; min=t[i];
+     }
+  }
+  return sml;
+}
+void display(int f[])
+{
+    for(int i=0;i<cp;i++)
+    {
+        printf("%d\t",f[i]);
+        printf("\t\t");
+    }
+    printf("\n");
+}
+
+void main()
+{ int n;
+    
+    printf("enter the number of frames :");
+    scanf("%d",&cp);
+    printf("enter the number of pages: ");
+    scanf("%d",&n);
+    
+    int f[cp];
+    int p[n]; 
+    printf("enter the page string :");
+    for(int i=0;i<n;i++)
+    {
+        scanf("%d",&p[i]);
+    }
+    
+    for(int i=0;i<cp;i++)
+    {
+        f[i]=-1; //empty frame
+    }
+    
+    for(int i=0;i<n;i++)
+    { flag1=flag2=0;
+        for(int j=0;j<cp;j++)
+        {
+            if(f[j]==p[i])
+            {
+                flag1=flag2=1; count++; //hit 
+                t[j]=count;
+                break;
+            }
+        }
+        if(flag1==0)
+        {
+            for(int j=0;j<cp;j++)
+            {
+                if(f[j]==-1)
+                {
+                     count++;
+                     t[j]=count;
+                     f[j]=p[i];
+                    fault++; //miss and empty spot
+                    flag2=1;
+                    break;
+                }
+            }
+        }
+        if(flag2==0)
+        {
+            int in=findmin(f);
+            f[in]=p[i]; count++;
+            t[in]=count;
+            fault++;
+        }
+        display(f);
+        
+    }
+    printf("total number of faults :%d",fault);
+}
