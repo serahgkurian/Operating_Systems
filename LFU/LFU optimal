@@ -1,0 +1,81 @@
+#include<stdio.h>
+#include<stdlib.h>
+int flag1,flag2=0;
+ int cp,n;
+ int fault=0;
+int find(int t[])
+{
+    int min=t[0]; int index=0;
+    for(int i=1;i<cp;i++)
+    {
+        if(t[i]<min)
+        {
+            min=t[i];
+            index=i;
+        }
+    }
+    return index;
+}
+
+void display(int f[])
+{
+    for(int i=0;i<cp;i++)
+    {
+       printf("%d\t",f[i]); 
+    }
+    printf("\n");
+}
+void main()
+{ 
+  printf("enter the number of frames and the number of pages:");
+  scanf("%d %d",&cp,&n);
+  printf("enter ur page string :");
+  int t[cp]; //contains the frequency count
+   int f[cp];int p[n];  
+  for(int i=0;i<n;i++)
+  {
+      scanf("%d",&p[i]);
+  }
+  for(int i=0;i<cp;i++)
+  {
+      f[i]=-1;
+      t[i]=0;
+  }
+  for(int i=0;i<n;i++)
+  { //iterating processes over frames
+   int flag1,flag2=0;
+      for(int j=0;j<cp;j++)
+      {
+          if(f[j]==p[i]) //page hit
+          {
+              t[j]++; // this is the logic of the code
+              flag1=flag2=1;
+          }
+      }
+      if(flag1==0)
+      {
+          //page miss check if empty slot
+          for(int j=0;j<cp;j++)
+          {
+              if(f[j]==-1)
+              {
+                  f[j]=p[i];
+                  t[j]++;
+                  flag2=1;//made mistake here
+                  fault++;
+                  break;
+              }
+          }
+      }
+      if(flag2==0)//page miss
+      {
+          int in=find(t);
+          f[in]=p[i];
+          t[in]=1; // reset the frequency count keep in mind
+          fault++;
+      }
+      display(f);
+  }
+  
+  printf("total number of faults %d :",fault);
+}
