@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct process
+{ 
+    int no;
+    int at;
+    int brst;
+    int wt;
+    int tat;
+    int ct;
+    int rem;
+    int done;
+}p[10];
+
+struct gannt
+{
+    int no;
+    int cm;
+}g[10];
+int n; int currt;
+
+void entry()
+{
+   printf("n?"); scanf("%d",&n);
+   for(int i=0;i<n;i++)
+   {
+       p[i].no=i+1;
+       printf("enter at, burst time "); scanf("%d %d",&p[i].at,&p[i].brst);
+       p[i].done=0; p[i].rem=p[i].brst; p[i].ct=0;
+   }
+}
+void display()
+{
+    printf("p\tat\tbt\twt\t tat\n");
+    for(int i=0;i<n;i++)
+    {
+        printf("%d\t%d\t%d\t%d\t%d\t",p[i].no,p[i].at,p[i].brst,p[i].wt,p[i].tat);
+        printf("\n");
+    }
+}
+void main()
+{
+    int timesl; int completed=n;
+    int t=0;
+    printf("Enter the time slice"); scanf("%d",&timesl);
+    entry();
+    while(completed!=n){
+        int all=1;
+   for(int i=0;i<n;i++)
+   {
+       if(p[i].done==0 && p[i].at<=currt){
+           all=0;
+       int ex=(p[i].rem<timesl?p[i].rem:timesl);
+       p[i].rem-=ex;
+       currt+=ex;
+       g[t].no=p[i].no;g[t].cm=currt;
+       t++;
+       if(p[i].rem==0)
+       {
+           p[i].done=1;
+           p[i].ct=currt;
+           p[i].tat=p[i].ct-p[i].at;
+           p[i].wt=p[i].tat-p[i].brst;
+           completed++;
+       }
+       }
+       if(all)
+       {
+           currt++;
+       }
+   }
+    }
+    printf("printing gantt chart\n");
+    
+    for(int i=0;i<t;i++)
+    {
+        printf("P%d\t",g[i].no);
+    }
+    printf("\n");
+    printf("0\t");
+    for(int i=0;i<t;i++)
+    {
+        printf("%d\t",g[i].cm);
+    }
+    printf("\n\n");
+    display();
+}
