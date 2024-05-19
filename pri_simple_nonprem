@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct prc 
+{
+  int wt;
+  int at;
+  int ct;
+  int done;
+  int tat;
+  int brst;
+  int pri;
+}p[10];
+int currt=0;int n;
+void entry()
+{
+    printf("n?");
+    scanf("%d",&n); //enter n
+      for(int i = 0; i < n; i++) {
+        printf("Enter Arrival Time, Burst Time, and Priority for Process %d: ", i + 1);
+        scanf("%d %d %d", &p[i].at, &p[i].brst, &p[i].pri);
+        p[i].done = 0;
+        p[i].wt = 0;
+        p[i].tat = 0;
+        p[i].ct = 0;
+    }
+}
+int searchindex()
+{
+    int index=-1;
+    int priority=99999;
+    for(int i=0;i<n;i++)
+    {
+        if(p[i].at<=currt && p[i].pri<=priority && p[i].done==0)
+        {
+            index=i;
+            priority=p[i].pri;
+        }
+       
+    }
+     return index;
+}
+void display()
+{
+    printf("p\tbrst\tat\twt\n");
+    for(int i=0;i<n;i++)
+    {
+        printf("%d\t",i);
+        printf("%d\t%d\t%d\t%d",p[i].brst,p[i].at,p[i].tat,p[i].wt);
+        printf("\n");
+    }
+}
+void findavg()
+{
+    float avgtat,avgwt=0;
+    for(int i=0;i<n;i++)
+    {
+        avgtat+=p[i].tat;
+        avgwt+=p[i].wt;
+    }
+    printf("average tat and avg wt: %f %f",avgtat,avgwt);
+}
+void main()
+{
+    int completed=0;
+    entry();
+    while(completed!=n)
+    {
+        int index=searchindex();
+        if(index != -1) {
+            currt += p[index].brst; // Add burst time to current time
+            p[index].ct = currt; // Completion time is current time
+            p[index].tat = p[index].ct - p[index].at; // Turnaround time
+            p[index].wt = p[index].tat - p[index].brst; // Waiting time
+            p[index].done = 1; // Mark process as completed
+            completed++;
+        }
+        else
+        {
+            currt++;
+        }
+        
+    }
+    display();
+    findavg();
+}
