@@ -1,0 +1,48 @@
+
+#include <stdio.h>
+int cp; int fault=0;
+void display(int f[])
+{
+    for(int i=0;i<cp;i++)
+    {
+        printf("%d\t",f[i]);
+    }
+    printf("\n");
+}
+int main()
+{ int n;
+   printf("enter the number of frames + pages:");
+   scanf("%d %d",&cp,&n);
+   int f[cp];int p[n];
+   for(int i=0;i<cp;i++)
+   {
+       f[i]=-1;
+   }
+   printf("enter the page string :");
+   for(int i=0;i<n;i++)
+   {
+       scanf("%d",&p[i]);
+   }
+   int flag=0;
+   int index=0;
+   for(int i=0;i<n;i++)
+   { flag=0;
+       for(int j=0;j<cp;j++)
+       {
+         if(f[j]==p[i])
+         {
+             flag=1;
+             //page hit
+             break;
+         }
+       }
+       if(flag==0) //outside loop -mistake
+         {
+             f[index]=p[i]; //logic of the code
+             index=(index+1)%cp;
+             fault++;
+         }
+       display(f);
+   }
+   printf("the fault count is :%d",fault);
+}
