@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include <stdio.h>
+struct pr
+{
+    int at;
+    int wt;int tat;
+    int brst;
+    int pno;
+    int ct;
+    int done;
+}p[10]; int n;
+int comp=0;
+int findindex()
+{ int index=-1; int sml=9999;
+    for(int i=0;i<n;i++)
+    {
+        if(p[i].at<=comp && p[i].done==0 && sml>p[i].brst)
+        {
+            sml=p[i].brst;
+            index=i;
+        }
+    }
+    return index;
+}
+void entry()
+{
+    printf("enter the number pages :");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++)
+    {
+        printf("enter the at brst of p%d ",i); scanf("%d %d",&p[i].at,&p[i].brst);
+        p[i].pno=i+1; p[i].done=0;
+    }
+    
+}
+void display()
+{
+    printf("p\twt\ttat\n");
+    for(int i=0;i<n;i++){
+   printf("p%d\t%d\t%d\n",p[i].pno,p[i].wt,p[i].tat); }
+}
+void avg()
+{ float totat,totwt=0;
+    for(int i=0;i<n;i++)
+    {
+        totat+=p[i].tat;
+        totwt+=p[i].wt;
+    }
+    totat=totat/(float)n;
+    totwt=totwt/(float)n;
+    printf("avg tat avg wt %f %f",totat,totwt);
+}
+int main()
+{ int completed=0;
+    entry();
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-1-i;j++ )
+        {
+            if(p[j].at>p[j+1].at)
+            {
+                struct pr temp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=temp;
+            }
+        }
+    }
+    comp=p[0].at;
+    while(completed!=n)
+    {
+        int in=findindex();
+        if(in!=-1)
+        {
+            p[in].ct=comp+p[in].brst;
+            p[in].tat=p[in].ct-p[in].at;
+            p[in].wt=p[in].tat-p[in].brst;
+            p[in].done=1;
+            completed++;
+            comp=p[in].ct; //missed this line
+        }
+        else
+        {
+            for(int i=0;i<n;i++) //if there is  no process at that time, get the process with the 
+            {
+                if(p[i].at>comp && p[i].done==0)
+                {
+                    comp=p[i].at;
+                    break;
+                }
+            }
+        }
+    }
+    
+    display();
+    avg();
+    
+    
+    return 0;
+}
