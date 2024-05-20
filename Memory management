@@ -1,0 +1,159 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct blk
+{
+    int bsize;
+    int status;
+    struct blk *next;
+    int freespace;
+};
+struct blk *head=NULL,*ptr,*temp;
+struct pr
+{
+    int pno;
+    int psize;
+    int done;
+}p[10];
+int n,m;
+void firstfit()
+{
+     for(int i=0;i<m;i++)
+    {
+        for(ptr=head;ptr!=NULL;ptr=ptr->next)
+        {
+            if(p[i].psize<=ptr->bsize && ptr->status==-1 )
+            {
+                ptr->freespace=ptr->bsize-p[i].psize;
+                ptr->status=p[i].pno;
+                p[i].done=1;
+                break;
+            }
+        }
+    }
+}
+void refresh()
+{
+    for(int i=0;i<m;i++)
+    {
+        p[i].done=-1;
+    }
+    for(ptr=head;ptr!=NULL;ptr=ptr->next)
+    {
+        ptr->freespace=ptr->bsize;
+        ptr->status=-1;
+    }
+}
+void bestfit()
+{
+    for(int i=0;i<m;i++)
+    {
+        int sml=9999; struct blk *smallest;
+        for(ptr=head;ptr!=NULL;ptr=ptr->next)
+        {
+            if(p[i].psize <=ptr->bsize && sml>ptr->bsize && ptr->status==-1)
+            {
+                sml=ptr->bsize;
+                smallest=ptr;
+                
+                
+            }
+        }
+        if(smallest!=NULL)
+        {
+            smallest->freespace=smallest->bsize-p[i].psize;
+                smallest->status=p[i].pno;
+                p[i].done=1;
+        }
+        
+    }
+}
+void worstfit()
+{
+   for(int i=0;i<m;i++)
+    {
+        int lrg=0; struct blk *largest=NULL; // made mistake here
+        for(ptr=head;ptr!=NULL;ptr=ptr->next)
+        {
+            if(p[i].psize <=ptr->bsize && lrg<ptr->bsize && ptr->status==-1)
+            {
+                lrg=ptr->bsize;
+                largest=ptr;
+                
+            }
+        }
+        if(largest!=NULL)
+        {
+            
+            largest->freespace=largest->bsize-p[i].psize;
+                largest->status=p[i].pno;
+                p[i].done=1;
+        }
+        
+    } 
+}
+void display()
+{
+    
+    printf("pno\tpsize\tallocated\n");
+    for(int i=0;i<m;i++)
+    {
+        printf("%d\t%d\t",p[i].pno,p[i].psize);
+        if(p[i].done==1)
+        {
+            printf("allocated");
+        }
+        else
+        {
+            printf("not allocated");
+        }
+        printf("\n");
+    }
+    printf("bsize\t\tfreespace\t\tpno\n");
+    for(ptr=head;ptr!=NULL;ptr=ptr->next)
+    {
+        printf("%d\t%d\t%d",ptr->bsize,ptr->freespace,ptr->status);
+        printf("\n");
+    }
+    
+}
+int main()
+{
+    printf("enter the number of blocks and processes :"); scanf("%d %d",&n,&m);
+    for(int i=0;i<n;i++)
+    {
+        temp=(struct blk *)malloc(sizeof(struct blk));
+        printf("enter the block size"); scanf("%d",&temp->bsize); 
+        temp->status=-1; temp->freespace=temp->bsize;
+        if(head==NULL)
+        {
+            head=temp;
+            head->next=NULL;
+            ptr=head;
+        }
+        else
+        {
+            ptr->next=temp;
+            ptr=temp;
+        }
+    }
+    for(int i=0;i<m;i++)
+    {
+        printf("enter the blk proc size"); scanf("%d",&p[i].psize);
+        p[i].done=0;
+        p[i].pno=i+1;
+        
+    }
+    printf("first fit\n");
+   firstfit(); 
+   display();
+   refresh();
+   printf("bestfit\n");
+   bestfit();
+   display();
+   refresh();
+   printf("worstfit\n");
+   worstfit();
+   display();
+
+    return 0;
+}
