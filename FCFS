@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+struct prc 
+{
+    int at;
+    int brst;
+    int wt;
+    int tat;
+    
+}ps[10],temp;
+int n;
+void main()
+{
+    printf("enter the no of processes");
+    scanf("%d",&n);
+    for(int i=0;i<n;i++)
+    {
+        printf("enter the arrivl n brst time");
+        scanf("%d %d",&ps[i].at,&ps[i].brst);
+    }
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(ps[j].at>ps[j+1].at)
+            {
+                temp=ps[j];
+                ps[j]=ps[j+1];
+                ps[j+1]=temp;
+            }
+        }
+    }
+    int ct=0;
+    for(int i=0;i<n;i++)
+    {
+      if(ct<ps[i].at)
+      {
+          ct=ps[i].at;
+      }
+      ct=ct+ps[i].brst;
+      ps[i].tat=ct-ps[i].at;
+      ps[i].wt=ps[i].tat-ps[i].brst;
+      
+    } float avgtt,avgwt=0;
+    for(int i=0;i<n;i++)
+    {
+        avgtt=avgtt+ps[i].tat;
+        avgwt=avgwt+ps[i].wt;
+    }
+    avgtt/=(float)n;
+    avgwt/=(float)n;
+    printf("the avg wait time %f",avgwt);
+    printf("avg tat %f",avgtt);
+}
